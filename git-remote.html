@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Remote Origin Manager</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2d333b 0%, #22272e 100%);
+            color: #adbac7;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(45, 51, 59, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #539bf5;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 20px 0 15px;
+            color: #ec775c;
+            border-bottom: 2px solid #444c56;
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 15px 0 10px;
+            color: #986ee2;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: #768390;
+        }
+        
+        .command-section {
+            background: rgba(45, 51, 59, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .command {
+            background: #2d333b;
+            border-left: 4px solid #539bf5;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #adbac7;
+            overflow-x: auto;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .command-text {
+            flex-grow: 1;
+        }
+        
+        .copy-btn {
+            background: #444c56;
+            border: none;
+            color: #adbac7;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #539bf5;
+        }
+        
+        .explanation {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(205, 217, 229, 0.05);
+            border-radius: 5px;
+        }
+        
+        .interactive-demo {
+            background: rgba(45, 51, 59, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background: #22272e;
+            border: 1px solid #444c56;
+            border-radius: 4px;
+            color: #adbac7;
+        }
+        
+        button {
+            background: #46954a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #57ab5a;
+        }
+        
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #22272e;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+        
+        .tip-box {
+            background: rgba(233, 185, 73, 0.1);
+            border-left: 4px solid #e9b949;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning-box {
+            background: rgba(229, 83, 75, 0.1);
+            border-left: 4px solid #e5534b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #768390;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Git Remote Origin Manager</h1>
+            <p>Learn how to add, change, and manage Git remote origins</p>
+        </header>
+        
+        <div class="intro">
+            <p>Git remote origins are essential for collaborating with others and pushing your code to remote repositories. This guide will show you how to manage them effectively.</p>
+        </div>
+        
+        <div class="command-section">
+            <h2>Adding a Remote Origin</h2>
+            
+            <div class="command">
+                <div class="command-text">git remote add origin &lt;repository-url&gt;</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            <div class="explanation">
+                <p>This command adds a new remote named "origin" pointing to your repository URL. The name "origin" is a convention for the primary remote repository.</p>
+            </div>
+            
+            <h3>Example with GitHub:</h3>
+            <div class="command">
+                <div class="command-text">git remote add origin https://github.com/username/repository-name.git</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            
+            <h3>Example with SSH:</h3>
+            <div class="command">
+                <div class="command-text">git remote add origin git@github.com:username/repository-name.git</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+        </div>
+        
+        <div class="command-section">
+            <h2>Changing an Existing Remote Origin</h2>
+            
+            <div class="command">
+                <div class="command-text">git remote set-url origin &lt;new-repository-url&gt;</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            <div class="explanation">
+                <p>Use this command to change the URL of an existing remote named "origin".</p>
+            </div>
+            
+            <h3>View current remote origins:</h3>
+            <div class="command">
+                <div class="command-text">git remote -v</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            <div class="explanation">
+                <p>This command shows all configured remote repositories and their URLs.</p>
+            </div>
+        </div>
+        
+        <div class="command-section">
+            <h2>Adding Multiple Remotes</h2>
+            
+            <div class="command">
+                <div class="command-text">git remote add &lt;name&gt; &lt;repository-url&gt;</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            <div class="explanation">
+                <p>You can add multiple remotes with different names. This is useful when working with forks or multiple repositories.</p>
+            </div>
+            
+            <h3>Example with upstream repository:</h3>
+            <div class="command">
+                <div class="command-text">git remote add upstream https://github.com/original-owner/repository-name.git</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            <div class="explanation">
+                <p>This adds a second remote named "upstream" which typically points to the original repository when you're working with a fork.</p>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h2>Interactive Demo</h2>
+            <p>Try out these commands with your own repository URLs:</p>
+            
+            <div class="form-group">
+                <label for="remote-name">Remote Name:</label>
+                <input type="text" id="remote-name" value="origin" placeholder="e.g., origin, upstream">
+            </div>
+            
+            <div class="form-group">
+                <label for="repo-url">Repository URL:</label>
+                <input type="text" id="repo-url" placeholder="e.g., https://github.com/username/repo.git">
+            </div>
+            
+            <button id="add-remote">Add Remote</button>
+            <button id="set-url">Set URL</button>
+            <button id="view-remotes">View Remotes</button>
+            
+            <div class="output" id="output">
+# Output will appear here after running commands
+# Try adding a remote or viewing current remotes
+            </div>
+        </div>
+        
+        <div class="command-section">
+            <h2>Additional Remote Operations</h2>
+            
+            <h3>Renaming a remote:</h3>
+            <div class="command">
+                <div class="command-text">git remote rename &lt;old-name&gt; &lt;new-name&gt;</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            
+            <h3>Removing a remote:</h3>
+            <div class="command">
+                <div class="command-text">git remote remove &lt;name&gt;</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+            
+            <h3>Show detailed information about a remote:</h3>
+            <div class="command">
+                <div class="command-text">git remote show &lt;name&gt;</div>
+                <button class="copy-btn">Copy</button>
+            </div>
+        </div>
+        
+        <div class="tip-box">
+            <h3>💡 Pro Tip</h3>
+            <p>Use SSH URLs for better security and convenience (no password typing for each push). Set up SSH keys in your GitHub/GitLab account for authentication.</p>
+        </div>
+        
+        <div class="warning-box">
+            <h3>⚠️ Important Note</h3>
+            <p>If you're changing the remote origin of an existing repository, make sure to inform all collaborators as they will need to update their local repositories.</p>
+        </div>
+        
+        <footer>
+            <p>Git is a trademark of Software Freedom Conservancy. This guide is for educational purposes.</p>
+            <p>Always verify repository URLs before adding them as remotes.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy button functionality
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const commandText = this.parentElement.querySelector('.command-text').textContent;
+                    navigator.clipboard.writeText(commandText).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Copied!';
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 2000);
+                    });
+                });
+            });
+            
+            // Interactive demo functionality
+            const addRemoteBtn = document.getElementById('add-remote');
+            const setUrlBtn = document.getElementById('set-url');
+            const viewRemotesBtn = document.getElementById('view-remotes');
+            const outputElement = document.getElementById('output');
+            const remoteNameInput = document.getElementById('remote-name');
+            const repoUrlInput = document.getElementById('repo-url');
+            
+            // Store "simulated" remotes
+            let remotes = [
+                { name: 'origin', url: 'https://github.com/username/repository.git' }
+            ];
+            
+            function updateOutput() {
+                outputElement.textContent = remotes.map(remote => 
+                    `${remote.name}\t${remote.url} (fetch)\n${remote.name}\t${remote.url} (push)`
+                ).join('\n');
+            }
+            
+            addRemoteBtn.addEventListener('click', function() {
+                const name = remoteNameInput.value.trim();
+                const url = repoUrlInput.value.trim();
+                
+                if (!name || !url) {
+                    outputElement.textContent = 'Error: Both remote name and URL are required.';
+                    return;
+                }
+                
+                // Check if remote already exists
+                if (remotes.some(remote => remote.name === name)) {
+                    outputElement.textContent = `Error: Remote '${name}' already exists.`;
+                    return;
+                }
+                
+                remotes.push({ name, url });
+                outputElement.textContent = `Remote '${name}' added with URL: ${url}`;
+                
+                // Clear the URL input
+                repoUrlInput.value = '';
+            });
+            
+            setUrlBtn.addEventListener('click', function() {
+                const name = remoteNameInput.value.trim();
+                const url = repoUrlInput.value.trim();
+                
+                if (!name || !url) {
+                    outputElement.textContent = 'Error: Both remote name and URL are required.';
+                    return;
+                }
+                
+                // Find the remote and update its URL
+                const remoteIndex = remotes.findIndex(remote => remote.name === name);
+                
+                if (remoteIndex === -1) {
+                    outputElement.textContent = `Error: Remote '${name}' does not exist.`;
+                    return;
+                }
+                
+                remotes[remoteIndex].url = url;
+                outputElement.textContent = `Remote '${name}' URL updated to: ${url}`;
+                
+                // Clear the URL input
+                repoUrlInput.value = '';
+            });
+            
+            viewRemotesBtn.addEventListener('click', function() {
+                if (remotes.length === 0) {
+                    outputElement.textContent = 'No remotes configured.';
+                    return;
+                }
+                
+                updateOutput();
+            });
+            
+            // Initial output update
+            updateOutput();
+        });
+    </script>
+</body>
+</html>
