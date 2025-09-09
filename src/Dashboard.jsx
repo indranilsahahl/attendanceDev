@@ -146,8 +146,7 @@ export default function Dashboard() {
   	if (distanceRef.current === null) {
     		alert('No GPS');
         	// Return object with isDismissed property
-    		return false;
-  	}
+    		return { isDismissed: true, isConfirmed: false, cancelled: true };
   
   	// Check if we have a timestamp (should exist if distance exists)
  	 if (!timeRef.current) {
