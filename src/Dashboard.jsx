@@ -153,7 +153,7 @@ export default function Dashboard() {
     	});
     
     	// Return object with isDismissed property
-    	return { isDismissed: true, swalResult: result };
+    	return { isConfirmed: false, isDenied: false, isDismissed: true };
   }
   
   	// Check if we have a timestamp (should exist if distance exists)
