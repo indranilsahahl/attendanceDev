@@ -167,6 +167,7 @@ export default function Dashboard() {
   	await callApi(attendanceLogin, empId, today, distanceRef.current);
   	await getAttendanceStat();
   	setLogTick((t) => t + 1); // trigger AttendanceLog to reload
+  	return { "success": true, "error": 'None' };
   };
   const handleAttendanceLogout = async () => {
   	const currentTime = new Date();
@@ -174,13 +175,13 @@ export default function Dashboard() {
   	// Check if we have any distance data at all
   	if (distanceRef.current === null) {
     		alert("No distance measurement available. Please wait for GPS signal.");
-    		return { isDismissed: true, swalResult: result };
+    		return { "success": false, "error": 'No GPS' };
   	}
   
   	// Check if we have a timestamp (should exist if distance exists)
   	if (!timeRef.current) {
     		alert("Distance data is incomplete. Please wait for GPS update.");
-    		return;
+    		return { "success": false, "error": 'No GPS' };
   	}
   
   	// Calculate age in seconds for better error message
@@ -189,12 +190,13 @@ export default function Dashboard() {
   
 	if (ageInSeconds > 300) { // 300 seconds = 5 minutes
 		alert(`Last distance calculation was ${ageInMinutes} minute(s) ago (${ageInSeconds} seconds). Please wait for fresh GPS update.`);
-		return;
+		return { "success": false, "error": 'No GPS' };
 	}
   	/* After All null checkings */
   	await callApi(attendanceLogout, empId, today, distanceRef.current);
   	await getAttendanceStat();
   	setLogTick((t) => t + 1); // trigger AttendanceLog to reload
+  	
   };
   const [logTick, setLogTick] = useState(0);
 	
