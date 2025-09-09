@@ -36,7 +36,8 @@ const confirmLogin = async () => {
   });
 
   if (res.isConfirmed) {
-    	res2 = await handleAttendanceLogin();
+  	console.log("Now in confirm!!!");
+    	const res2 = await handleAttendanceLogin();
     	console.log(res2.type);
     	console.log("Type:", res2.type);
     	console.log("Value:", res2.value);
