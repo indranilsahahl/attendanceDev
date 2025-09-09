@@ -1,5 +1,5 @@
 //✅ Daashboard.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { claimDevice, attendanceCheck, attendanceLogin, attendanceLogout } from "./api.js";
 import AttendanceEntry from "./AttendanceEntry";
@@ -14,7 +14,17 @@ export default function Dashboard() {
   const [claimResult, setClaimResult] = useState("");
   const [geo, setGeo] = useState({ lat: null, long: null, accuracy: null, error: null });
   const [distance, setDistance] = useState(null);
-
+  // Create a ref to track the latest distance value
+  const distanceRef = useRef(null);
+  const timeRef =useRef(null);
+  
+  // Update both state and ref when distance changes
+  const updateDistance = (d) => {
+    setDistance(d);
+    distanceRef.current = d;
+    timeRef.current = new Date(); 
+  }; 
+	
   // bump this to force re-read of sessionStorage-backed memo
   const [storageTick, setStorageTick] = useState(0);
 
@@ -78,7 +88,7 @@ export default function Dashboard() {
             : null;
 
         setGeo({ lat: latitude, long: longitude, accuracy, error: null });
-        setDistance(d);
+        updateDistance(d);
       },
       (err) => setGeo((g) => ({ ...g, error: err.message || "Unable to fetch location" })),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
@@ -126,12 +136,58 @@ export default function Dashboard() {
   	}
    };
   const handleAttendanceLogin = async () => {
-  	await callApi(attendanceLogin, empId, today, distance);
+  	const currentTime = new Date();
+  
+  	// Check if we have any distance data at all
+  	if (distanceRef.current === null) {
+    		alert("No distance measurement available. Please wait for GPS signal.");
+    	return;
+  	}
+  
+  	// Check if we have a timestamp (should exist if distance exists)
+  	if (!timeRef.current) {
+    		alert("Distance data is incomplete. Please wait for GPS update.");
+    	return;
+  	}
+  
+  	// Calculate age in seconds for better error message
+  	const ageInSeconds = Math.floor((currentTime - timeRef.current) / 1000);
+  	const ageInMinutes = Math.floor(ageInSeconds / 60);
+  
+	if (ageInSeconds > 300) { // 300 seconds = 5 minutes
+		alert(`Last distance calculation was ${ageInMinutes} minute(s) ago (${ageInSeconds} seconds). Please wait for fresh GPS update.`);
+		   return;
+	}  	
+  	/* After all checks for null */
+  	await callApi(attendanceLogin, empId, today, distanceRef.current);
   	await getAttendanceStat();
   	setLogTick((t) => t + 1); // trigger AttendanceLog to reload
   };
   const handleAttendanceLogout = async () => {
-  	await callApi(attendanceLogout, empId, today, distance);
+  	const currentTime = new Date();
+  
+  	// Check if we have any distance data at all
+  	if (distanceRef.current === null) {
+    		alert("No distance measurement available. Please wait for GPS signal.");
+    		return;
+  	}
+  
+  	// Check if we have a timestamp (should exist if distance exists)
+  	if (!timeRef.current) {
+    		alert("Distance data is incomplete. Please wait for GPS update.");
+    		return;
+  	}
+  
+  	// Calculate age in seconds for better error message
+  	const ageInSeconds = Math.floor((currentTime - timeRef.current) / 1000);
+  	const ageInMinutes = Math.floor(ageInSeconds / 60);
+  
+	if (ageInSeconds > 300) { // 300 seconds = 5 minutes
+		alert(`Last distance calculation was ${ageInMinutes} minute(s) ago (${ageInSeconds} seconds). Please wait for fresh GPS update.`);
+		return;
+	}
+  	/* After All null checkings */
+  	await callApi(attendanceLogout, empId, today, distanceRef.current);
   	await getAttendanceStat();
   	setLogTick((t) => t + 1); // trigger AttendanceLog to reload
   };
