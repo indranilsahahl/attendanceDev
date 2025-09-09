@@ -145,20 +145,14 @@ export default function Dashboard() {
   	// Check if we have any distance data at all
   	if (distanceRef.current === null) {
     		alert('No GPS');
-        	return {success: false, error: 'No GPS'};
+        	return {"success": false, "error": 'No GPS'};
         }
   
   	// Check if we have a timestamp (should exist if distance exists)
  	 if (!timeRef.current) {
- 	   const result = await Swal.fire({
- 	     title: 'Incomplete Data',
- 	     text: 'Distance data is incomplete. Please wait for GPS update.',
- 	     icon: 'warning',
- 	     confirmButtonText: 'OK',
- 	     showCancelButton: false
- 	   });
+ 	   alert("Distance Can not be neasured. Please enable GPS and refresh");
     
-    return { isDismissed: true, swalResult: result };
+    return { "success": false, "error": 'No GPS' };
   }
   
   	// Calculate age in seconds for better error message
@@ -167,7 +161,7 @@ export default function Dashboard() {
   
 	if (ageInSeconds > 300) { // 300 seconds = 5 minutes
 		alert(`Last distance calculation was ${ageInMinutes} minute(s) ago (${ageInSeconds} seconds). Please wait for fresh GPS update.`);
-		   return { isDismissed: true, swalResult: result };
+		   return { "success": false, "error": 'No GPS' };
 	}  	
   	/* After all checks for null */
   	await callApi(attendanceLogin, empId, today, distanceRef.current);
