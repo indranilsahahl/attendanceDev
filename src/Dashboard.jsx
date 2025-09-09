@@ -141,19 +141,10 @@ export default function Dashboard() {
   	}
    };
   const handleAttendanceLogin = async () => {
-  	const currentTime = new Date();
-  	// Check if we have any distance data at all
-  	if (distanceRef.current === null) {
-    	const result = await Swal.fire({
-      		title: 'GPS Signal Required',
-      		text: 'No distance measurement available. Please wait for GPS signal.',
-      		icon: 'warning',
-      		confirmButtonText: 'OK',
-      		showCancelButton: false
-    	});
+  	alert("No GPS Available. Please enable GPS");
     
     	// Return object with isDismissed property
-    	return { isConfirmed: false, isDenied: false, isDismissed: true };
+    	return false;
   }
   
   	// Check if we have a timestamp (should exist if distance exists)
