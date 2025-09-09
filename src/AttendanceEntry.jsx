@@ -39,10 +39,9 @@ const confirmLogin = async () => {
   	console.log("Now in confirm!!!");
     	const res2 = await handleAttendanceLogin();
     	console.log("Full response:", res2);
-      	console.log("Type:", res2?.type);
-	console.log("Value:", res2?.value);
+      	console.log("Success:", res2?.success);
     
-    	if ( res2 ) {
+    	if ( res2.success ) {
     		await MySwal.fire({
       		...baseOptions,
       		icon: "success",
