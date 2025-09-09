@@ -152,7 +152,7 @@ export default function Dashboard() {
  	 if (!timeRef.current) {
  	   alert("Distance Can not be neasured. Please enable GPS and refresh");
     
-    return { "success": false, "error": 'No GPS' };
+    return {"success": false, "error": 'No GPS'};
   }
   
   	// Calculate age in seconds for better error message
@@ -161,13 +161,13 @@ export default function Dashboard() {
   
 	if (ageInSeconds > 300) { // 300 seconds = 5 minutes
 		alert(`Last distance calculation was ${ageInMinutes} minute(s) ago (${ageInSeconds} seconds). Please wait for fresh GPS update.`);
-		   return { "success": false, "error": 'No GPS' };
+		   return {"success": false, "error": 'No GPS'};
 	}  	
   	/* After all checks for null */
   	await callApi(attendanceLogin, empId, today, distanceRef.current);
   	await getAttendanceStat();
   	setLogTick((t) => t + 1); // trigger AttendanceLog to reload
-  	return { "success": true, "error": 'None' };
+  	return {"success": true, "error": 'None'};
   };
   const handleAttendanceLogout = async () => {
   	const currentTime = new Date();
