@@ -141,11 +141,13 @@ export default function Dashboard() {
   	}
    };
   const handleAttendanceLogin = async () => {
-  	alert("No GPS Available. Please enable GPS");
-    
-    	// Return object with isDismissed property
-    	return false;
-  }
+  	const currentTime = new Date();
+  	// Check if we have any distance data at all
+  	if (distanceRef.current === null) {
+    		alert('No GPS');
+        	// Return object with isDismissed property
+    		return {isConfirmed: false, isDenied: false, isDismissed: true, dismiss: 'timer'};
+  	}
   
   	// Check if we have a timestamp (should exist if distance exists)
  	 if (!timeRef.current) {
