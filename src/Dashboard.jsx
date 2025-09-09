@@ -6,6 +6,11 @@ import AttendanceEntry from "./AttendanceEntry";
 import AttendanceLog from "./AttendanceLog";
 import "./custom.css";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
+
+
 export default function Dashboard() {
   const navigate = useNavigate();
 
@@ -137,18 +142,32 @@ export default function Dashboard() {
    };
   const handleAttendanceLogin = async () => {
   	const currentTime = new Date();
-  
   	// Check if we have any distance data at all
   	if (distanceRef.current === null) {
-    		alert("No distance measurement available. Please wait for GPS signal.");
-    	return;
-  	}
+    	const result = await Swal.fire({
+      		title: 'GPS Signal Required',
+      		text: 'No distance measurement available. Please wait for GPS signal.',
+      		icon: 'warning',
+      		confirmButtonText: 'OK',
+      		showCancelButton: false
+    	});
+    
+    	// Return object with isDismissed property
+    	return { isDismissed: true, swalResult: result };
+  }
   
   	// Check if we have a timestamp (should exist if distance exists)
-  	if (!timeRef.current) {
-    		alert("Distance data is incomplete. Please wait for GPS update.");
-    	return;
-  	}
+ 	 if (!timeRef.current) {
+ 	   const result = await Swal.fire({
+ 	     title: 'Incomplete Data',
+ 	     text: 'Distance data is incomplete. Please wait for GPS update.',
+ 	     icon: 'warning',
+ 	     confirmButtonText: 'OK',
+ 	     showCancelButton: false
+ 	   });
+    
+    return { isDismissed: true, swalResult: result };
+  }
   
   	// Calculate age in seconds for better error message
   	const ageInSeconds = Math.floor((currentTime - timeRef.current) / 1000);
