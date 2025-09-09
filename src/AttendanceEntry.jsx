@@ -92,15 +92,31 @@ const confirmLogout = async () => {
   });
 
   if (res.isConfirmed) {
-    handleAttendanceLogout();
-    await MySwal.fire({
-      ...baseOptions,
-      icon: "success",
-      title: "Logged out!",
-      text: "You have successfully logged out.",
-      timer: 2000,
-      showConfirmButton: false,
-    });
+    console.log("Now in Logout->confirm!!!");
+    	const res2 = await handleAttendanceLogout();
+    	console.log("Full response:", res2);
+      	console.log("Success:", res2?.success);
+    
+    	if ( res2.success ) {
+    		await MySwal.fire({
+     		 ...baseOptions,
+    		  icon: "success",
+     		 title: "Logged out!",
+     		 text: "You have successfully logged out.",
+     		 timer: 2000,
+      		showConfirmButton: false,
+    		});
+    } else {
+		await MySwal.fire({
+    		...baseOptions,
+      		icon: "warning",
+      		title: "Not Logged Out!",
+      		text: "GPS Problem in logout",
+      		timer: 2000,
+     		showConfirmButton: false,
+    		});
+
+    }
   } else if (res.isDismissed) {
     await MySwal.fire({
       ...baseOptions,
