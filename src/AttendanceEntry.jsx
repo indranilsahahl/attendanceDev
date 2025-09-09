@@ -36,15 +36,28 @@ const confirmLogin = async () => {
   });
 
   if (res.isConfirmed) {
-    handleAttendanceLogin();
-    await MySwal.fire({
-      ...baseOptions,
-      icon: "success",
-      title: "Logged in!",
-      text: "You have successfully logged in.",
-      timer: 2000,
-      showConfirmButton: false,
-    });
+    	res2 = handleAttendanceLogin();
+    	if ( res2 ) {
+    		await MySwal.fire({
+      		...baseOptions,
+      		icon: "success",
+      		title: "Logged in!",
+      		text: "You have successfully logged in.",
+      		timer: 2000,
+     		showConfirmButton: false,
+    		});
+    } else {
+		await MySwal.fire({
+    		...baseOptions,
+      		icon: "warning",
+      		title: "Not Logged in!",
+      		text: "GPS Problem in login",
+      		timer: 2000,
+     		showConfirmButton: false,
+    		});
+
+    }
+    
   } else if (res.isDismissed) {
     await MySwal.fire({
       ...baseOptions,
