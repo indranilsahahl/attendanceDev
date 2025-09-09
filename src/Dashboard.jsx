@@ -145,7 +145,7 @@ export default function Dashboard() {
   	// Check if we have any distance data at all
   	if (distanceRef.current === null) {
     		alert('No GPS');
-        	return{"error":"No GPS"};
+        	return {isDismissed:true,};
         }
   
   	// Check if we have a timestamp (should exist if distance exists)
